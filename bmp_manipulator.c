@@ -13,7 +13,7 @@
 
 int menu(void)
 {
-    const char *arrow[5] = {" "," ",">"," "," "};
+	const char *arrow[5] = {" "," ",">"," "," "};
 	int choice = 0;
 	
 	char char_input = 0;
@@ -49,17 +49,17 @@ int menu(void)
 
 void read_pause_stdin(void)
 {
-    getc(stdin);
+	getc(stdin);
 	getc(stdin);
 }
 
 int main(void)
 {
 
-    int option = -1;
+	int option = -1;
 	char *filename = (char *)malloc(4);
-    FILE *file;
-    printf("ne");
+	FILE *file;
+	
 	//menu
 	while(option != 2)
 	{
@@ -67,34 +67,44 @@ int main(void)
         {
             printf("\n Input txt file containing pixel data: ");
             scanf("%s", filename);
+			
             file = open_file_r(filename);
+			
             int width = number_of_pixels_in_first_row_of_file(file, 1);
             fseek(file, 0, SEEK_SET);
             int height = rows_in_file(file);
             fseek(file, 0, SEEK_SET);
+			
             pixel *pixels = malloc((height*width) * sizeof(pixel));
             load_rgb_data_from_txt_file(file, width, height, pixels);
+	
+	    free(filename);
+	    fclose(file);
+			
             printf("\nInput image filename: ");
-			free(filename);
-			fclose(file);
+	    
             scanf("%s", filename);
             file = open_file_wb(filename);
             write_header_to_file(width, height, file);
             dump_pixels_to_image(width, height, file, pixels);
+			
             printf("\n DONE.");
+			
             read_pause_stdin();
         }
-		if(option == 0)
-		{
-            printf("\n Input filename: ");
-            scanf("%s", filename);
-            file = open_file_rb(filename);
-			load_and_print_bmp_file_header(file);
-            printf("\n\nPRESS ANY KEY TO RETURN TO MENU...");
-            free(file);
-            read_pause_stdin();
-		}
-		option = menu();
+	if(option == 0)
+	{
+	    printf("\n Input filename: ");
+	    scanf("%s", filename);
+	    
+	    file = open_file_rb(filename);
+	    load_and_print_bmp_file_header(file);
+	    
+	    printf("\n\nPRESS ANY KEY TO RETURN TO MENU...");
+	    free(file);
+	    read_pause_stdin();
+	}
+	    option = menu();
 	}
 
     printf("\n");
